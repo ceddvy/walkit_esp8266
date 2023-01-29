@@ -25,7 +25,6 @@
 #include "BlynkEdgent.h"
 
 BlynkTimer timer;
-WidgetLCD lcd(V3);
 
 long duration;
 int distance;
@@ -59,16 +58,17 @@ void sendSensor(){
   digitalWrite(trig, LOW);
 
   duration = pulseIn(echo, HIGH);
-  distance = duration * 0.034 / 2;
+  distance = (duration * 0.034) / 2;
 
   Serial.print("Distance: ");
   Serial.println(distance);
 
   if(distance <= userSet){
     Blynk.logEvent("walkit", String("Walker detected an obstacle. Now Turning."));
+    delay(5000);
   }
-  lcd.print(0, 0, "Distance: ");
-  lcd.print(0, 1, String(distance)+ "cm");
+  
+  Blynk.virtualWrite(V3, distance);
   delay(1000);
 
 }
